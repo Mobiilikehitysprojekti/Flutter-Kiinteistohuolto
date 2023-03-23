@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import './signIn.dart';
@@ -29,8 +30,14 @@ class MyStatefulWidget extends StatefulWidget {
 }
 
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
-  TextEditingController nameController = TextEditingController();
+  TextEditingController firstnameController = TextEditingController();
+  TextEditingController lastnameController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  TextEditingController pwagainController = TextEditingController();
+
+ 
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +62,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             Container(
               padding: const EdgeInsets.all(10),
               child: TextField(
-                controller: nameController,
+                controller: firstnameController,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'First name',
@@ -66,7 +73,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
               padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
               child: TextField(
                 obscureText: true,
-                controller: passwordController,
+                controller: lastnameController,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Last name',
@@ -77,7 +84,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
               padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
               child: TextField(
                 obscureText: true,
-                controller: passwordController,
+                controller: addressController,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Address',
@@ -88,7 +95,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
               padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
               child: TextField(
                 obscureText: true,
-                controller: passwordController,
+                controller: emailController,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Email',
@@ -110,7 +117,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
               padding: const EdgeInsets.fromLTRB(10, 10, 10, 20),
               child: TextField(
                 obscureText: true,
-                controller: passwordController,
+                controller: pwagainController,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Retype password',
@@ -121,9 +128,9 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 height: 50,
                 padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                 child: ElevatedButton(
-                  child: const Text('Login'),
+                  child: const Text('Register'),
                   onPressed: () {
-                    print(nameController.text);
+                    print(emailController.text);
                     print(passwordController.text);
                   },
                 )),
@@ -149,5 +156,12 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             ),
           ],
         ));
+  }
+
+  Future signIn() async {
+    await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: emailController.text.trim(),
+      password: passwordController.text.trim(),
+      );
   }
 }
