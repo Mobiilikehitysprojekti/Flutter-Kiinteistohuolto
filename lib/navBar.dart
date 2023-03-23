@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import './settings.dart';
+
+
 class NavBar extends StatefulWidget {
   const NavBar({super.key});
 
@@ -16,6 +19,14 @@ class _NavBarState extends State<NavBar> {
     setState(() {
       _selectedIndex = index;
     });
+    if (_selectedIndex == 3) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Settings(),
+        ),
+      );
+    }
   }
 
   @override
@@ -35,6 +46,11 @@ class _NavBarState extends State<NavBar> {
         BottomNavigationBarItem(
           icon: Icon(Icons.newspaper),
           label: 'News',
+          backgroundColor: Colors.grey,
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.settings),
+          label: 'Settings',
           backgroundColor: Colors.grey,
         ),
       ],
