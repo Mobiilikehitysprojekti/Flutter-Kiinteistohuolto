@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "324639366248",
+    "firebase_url": "https://kiinteistoapp-default-rtdb.firebaseio.com",
+    "project_id": "kiinteistoapp",
+    "storage_bucket": "kiinteistoapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:324639366248:android:4a4f51718622f4236cafdd",
+        "android_client_info": {
+          "package_name": "com.example.flutter_kiinteistohuolto"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "324639366248-p7h6knidc7lp7obhbieqnsl6cha75q1g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGLalJnmxP9aNXIIoAXg-udpI8zDD1iwg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "324639366248-p7h6knidc7lp7obhbieqnsl6cha75q1g.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "324639366248-8laqd6mcgl44iqg2jff7obm4ts68mreb.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.flutterKiinteistohuolto"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
