@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import './signup.dart';
+import './main.dart';
 
 void main() => runApp(const Signin());
 
@@ -25,7 +26,7 @@ class Signin extends StatelessWidget {
 
 class MyStatefulWidget extends StatefulWidget {
   const MyStatefulWidget({Key? key}) : super(key: key);
-  
+
   @override
   State<MyStatefulWidget> createState() => _MyStatefulWidgetState();
 }
@@ -34,7 +35,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
-   @override
+  @override
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
@@ -59,9 +60,9 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                       fontSize: 30),
                 )),
             Container(
-                alignment: Alignment.center,
-                padding: const EdgeInsets.all(10),
-                ),
+              alignment: Alignment.center,
+              padding: const EdgeInsets.all(10),
+            ),
             Container(
               padding: const EdgeInsets.all(10),
               child: TextField(
@@ -95,9 +96,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 height: 50,
                 padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                 child: ElevatedButton(
-                  child: const Text('Login'),
-                  onPressed: signIn
-                )),
+                    child: const Text('Login'), onPressed: signIn)),
             Row(
               children: <Widget>[
                 const Text('Does not have account?'),
@@ -121,10 +120,21 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
           ],
         ));
   }
-   Future signIn() async {
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: emailController.text.trim(),
-      password: passwordController.text.trim(),
+
+  Future signIn() async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => Center(child: CircularProgressIndicator()),
+    );
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
       );
+    } on FirebaseAuthException catch (e) {
+      print(e);
+    }
+    navigatorKey.currentState!.popUntil((route) => route.isFirst);
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_kiinteistohuolto/signIn.dart';
 
 void main() => runApp(const Settings());
 
@@ -10,6 +11,8 @@ class Settings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser!;
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: _title,
@@ -29,6 +32,9 @@ class MyStatefulWidget extends StatefulWidget {
 }
 
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
+  final user = FirebaseAuth.instance.currentUser!;
+  FirebaseAuth auth = FirebaseAuth.instance;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -36,21 +42,17 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       child: ListView(children: <Widget>[
         Container(
             alignment: Alignment.center,
-            padding: const EdgeInsets.all(10),
-            child: const Text(
+            padding: EdgeInsets.all(10),
+            child: Text(
               'KiinteistoApp',
               style: TextStyle(
                   color: Colors.blue,
                   fontWeight: FontWeight.w500,
                   fontSize: 30),
             )),
-        Container(
-          height: 50,
-          padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-          child: ElevatedButton(
-            child: const Text('Sign out'),
-            onPressed: () => FirebaseAuth.instance.signOut(),
-          ),
+        ElevatedButton(
+          child: Text("Sign out"),
+          onPressed: () => FirebaseAuth.instance.signOut(),
         ),
       ]),
     );
