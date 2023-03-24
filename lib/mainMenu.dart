@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-
 import 'navBar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 
 class MainMenu extends StatelessWidget {
   const MainMenu({super.key, required this.title});
@@ -10,22 +11,20 @@ class MainMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(title), ),
+      appBar: AppBar(
+        title: Text(title),
+      ),
       body: ListView.builder(
           itemCount: 10,
           itemBuilder: (context, index) {
-            return const MenuCard();
+            return  MenuCard();
           }),
-          
-      bottomNavigationBar: const NavBar(),
+      bottomNavigationBar: NavBar(),
     );
-    
   }
 }
 
 class MenuCard extends StatelessWidget {
-  const MenuCard({super.key});
-
   final cardAmount = 3;
 
   @override

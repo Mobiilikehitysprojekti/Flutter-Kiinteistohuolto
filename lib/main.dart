@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 
 import './signIn.dart';
 import './mainMenu.dart';
+import './settings.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,9 +35,7 @@ class MainPage extends StatelessWidget {
             } else if (snapshot.hasError) {
               return Center(child: Text('Something went wrong!'));
             } else if (snapshot.hasData) {
-              return MainMenu(
-                title: "HomePage",
-              );
+              return MainMenu(title: "Menu");
             } else {
               return Signin();
             }
