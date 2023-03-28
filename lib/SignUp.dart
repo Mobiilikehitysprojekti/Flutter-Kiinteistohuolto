@@ -131,7 +131,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 height: 50,
                 padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                 child: ElevatedButton(
-                    child: const Text('Login'), onPressed: signIn)),
+                    child: const Text('Register'), onPressed: signUP)),
             Row(
               children: <Widget>[
                 const Text('Already have an account?'),
@@ -154,13 +154,6 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             ),
           ],
         ));
-  }
-
-  Future signIn() async {
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: emailController.text.trim(),
-      password: passwordController.text.trim(),
-    );
   }
 
   Future signUP() async {

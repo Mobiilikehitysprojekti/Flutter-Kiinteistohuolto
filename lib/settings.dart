@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_kiinteistohuolto/signIn.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:gap/gap.dart';
 
 class Settings extends StatelessWidget {
   final TextEditingController _newPasswordController = TextEditingController();
@@ -56,7 +54,6 @@ class Settings extends StatelessWidget {
             ),
           ),
           Container(
-            alignment: Alignment.center,
             padding: const EdgeInsets.fromLTRB(10, 10, 10, 20),
             child: ElevatedButton(
               child: const Text('Sign out'),
