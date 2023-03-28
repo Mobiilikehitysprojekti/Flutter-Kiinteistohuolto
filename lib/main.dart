@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_kiinteistohuolto/utils.dart';
 
 import './signIn.dart';
 import './mainMenu.dart';
@@ -18,6 +19,7 @@ final navigatorKey = GlobalKey<NavigatorState>();
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) => MaterialApp(
+        scaffoldMessengerKey: Utils.messengerKey,
         navigatorKey: navigatorKey,
         debugShowCheckedModeBanner: false,
         home: MainPage(),

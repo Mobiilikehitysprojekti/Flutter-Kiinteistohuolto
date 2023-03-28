@@ -1,5 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_kiinteistohuolto/main.dart';
+import 'package:flutter_kiinteistohuolto/utils.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import './signIn.dart';
 
@@ -37,14 +40,13 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController pwagainController = TextEditingController();
 
- 
-
   @override
   Widget build(BuildContext context) {
     return Padding(
         padding: const EdgeInsets.all(10),
         child: ListView(
           children: <Widget>[
+            /*
             Container(
                 alignment: Alignment.center,
                 padding: const EdgeInsets.all(10),
@@ -72,7 +74,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             Container(
               padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
               child: TextField(
-                obscureText: true,
+                obscureText: false,
                 controller: lastnameController,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
@@ -83,7 +85,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             Container(
               padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
               child: TextField(
-                obscureText: true,
+                obscureText: false,
                 controller: addressController,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
@@ -91,10 +93,11 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 ),
               ),
             ),
+            */
             Container(
               padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
               child: TextField(
-                obscureText: true,
+                obscureText: false,
                 controller: emailController,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
@@ -128,12 +131,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 height: 50,
                 padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                 child: ElevatedButton(
-                  child: const Text('Register'),
-                  onPressed: () {
-                    print(emailController.text);
-                    print(passwordController.text);
-                  },
-                )),
+                    child: const Text('Login'), onPressed: signIn)),
             Row(
               children: <Widget>[
                 const Text('Already have an account?'),
@@ -162,6 +160,28 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     await FirebaseAuth.instance.signInWithEmailAndPassword(
       email: emailController.text.trim(),
       password: passwordController.text.trim(),
+    );
+  }
+
+  Future signUP() async {
+    if (passwordController.text.trim() != pwagainController.text.trim()) {
+      Fluttertoast.showToast(msg: "Passwords do not match");
+    } else {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => Center(child: CircularProgressIndicator()),
       );
+      try {
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: emailController.text.trim(),
+          password: passwordController.text.trim(),
+        );
+      } on FirebaseAuthException catch (e) {
+        print(e);
+        Utils.showSnackBar(e.message);
+      }
+      navigatorKey.currentState!.popUntil((route) => route.isFirst);
+    }
   }
 }

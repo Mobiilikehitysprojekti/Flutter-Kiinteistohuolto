@@ -74,7 +74,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
               ),
             ),
             Container(
-              padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+              padding: const EdgeInsets.fromLTRB(10, 10, 10, 20),
               child: TextField(
                 obscureText: true,
                 controller: passwordController,
@@ -82,14 +82,6 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                   border: OutlineInputBorder(),
                   labelText: 'Password',
                 ),
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                //change password screen
-              },
-              child: const Text(
-                'Change Password',
               ),
             ),
             Container(
