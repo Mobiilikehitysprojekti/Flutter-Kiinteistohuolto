@@ -14,7 +14,6 @@ class News extends StatefulWidget {
 }
 
 class _NewsState extends State<News> {
-  int _cardCount = 3;
   bool isAdmin = true;
   bool isEditing = false;
   String? selectedCardId;
@@ -116,7 +115,7 @@ class _NewsState extends State<News> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[
-                          if (isAdmin)
+                          if (isAdmin && !isEditing)
                             TextButton(
                               child: const Text('edit'),
                               onPressed: () {
@@ -131,7 +130,7 @@ class _NewsState extends State<News> {
                               },
                             ),
                           const SizedBox(width: 8),
-                          if (isAdmin)
+                          if (isAdmin && !isEditing)
                             TextButton(
                               child: const Text('delete'),
                               onPressed: () {
