@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'navBar.dart';
+import 'package:intl/intl.dart';
+
 
 class News extends StatefulWidget {
   const News({Key? key, required this.title}) : super(key: key);
@@ -38,7 +40,7 @@ class _NewsState extends State<News> {
         ],
       ),
       body: StreamBuilder(
-        stream: _services.snapshots(),
+        stream: _services.orderBy('timestamp', descending: true).snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
           if (streamSnapshot.hasData) {
             return ListView.builder(
@@ -86,9 +88,7 @@ class _NewsState extends State<News> {
                                         _titleEditingController.text;
                                     final newDescription =
                                         _descriptionEditingController.text;
-                                    _services
-                                        .doc(documentSnapshot.id)
-                                        .update({
+                                    _services.doc(documentSnapshot.id).update({
                                       'title': newTitle,
                                       'description': newDescription
                                     }).then((value) => setState(() {
@@ -106,6 +106,12 @@ class _NewsState extends State<News> {
                         ListTile(
                           title: Text(documentSnapshot['title']),
                           subtitle: Text(documentSnapshot['description']),
+                          trailing: Text(
+                            DateFormat('MMM d, yyyy h:mm a').format(
+                              (documentSnapshot['timestamp'] as Timestamp)
+                                  .toDate(),
+                            ),
+                          ),
                         ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
@@ -153,95 +159,7 @@ class _NewsState extends State<News> {
     _services.add({
       'title': 'New card title',
       'description': 'New card description',
+      'timestamp': Timestamp.now(),
     });
-  }
-}
-
-
-
-
-class MenuCard extends StatefulWidget {
-  const MenuCard({Key? key, required this.isAdmin}) : super(key: key);
-  final bool isAdmin;
-
-  @override
-  _MenuCardState createState() => _MenuCardState();
-}
-
-class _MenuCardState extends State<MenuCard> {
-  bool isExpanded = false;
-  bool isEditing = false;
-  String _description = 'Description'; // variable to save user input
-  TextEditingController _textEditingController =
-      TextEditingController(text: 'Enter new desc');
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          ListTile(
-            title: Text('News title'),
-            subtitle: isEditing
-                ? TextFormField(
-                    controller: _textEditingController,
-                    decoration: InputDecoration(
-                      hintText: 'Enter a new description',
-                    ),
-                    onChanged: (value) {
-                      _description = value; // save user input to variable
-                    },
-                  )
-                : Text(_description), // display the saved user input
-          ),
-          if (isExpanded)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Text('More details'),
-            ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              TextButton(
-                child: Text(
-                  isEditing ? 'Save' : 'Edit',
-                  style: TextStyle(
-                    color: widget.isAdmin ? Colors.blue : Colors.grey,
-                  ),
-                ),
-                onPressed: widget.isAdmin
-                    ? () {
-                        setState(() {
-                          if (!isEditing) {
-                            isEditing = true;
-                          } else {
-                            isEditing = false;
-                          }
-                        });
-                      }
-                    : null,
-              ),
-              SizedBox(width: 8),
-              TextButton(
-                child: Text(isExpanded ? 'Close' : 'Read more'),
-                onPressed: () {
-                  setState(() {
-                    isExpanded = !isExpanded;
-                  });
-                },
-              ),
-              SizedBox(width: 8),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  @override
-  void dispose() {
-    _textEditingController.dispose();
-    super.dispose();
   }
 }
