@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_kiinteistohuolto/mainMenu.dart';
+import './news.dart';
 
 import './settings.dart';
 
@@ -12,26 +14,28 @@ class NavBar extends StatefulWidget {
 
 class _NavBarState extends State<NavBar> {
   int _selectedIndex = 0;
+  final List<String> menuTitle = ["Main menu", "Order history/Status", "News", "Settings"]; 
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+  static List<Widget> _widgetOptions = <Widget>[
+    const Scaffold(body: MainMenu()),
+    const Text("Order history"),
+    const Scaffold(body: News()),
+    Scaffold(body:  SettingsPage())
+  ];
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
-    if (_selectedIndex == 3) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => Settings(),
-        ),
-      );
-    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return BottomNavigationBar(
+    return Scaffold (
+    appBar: AppBar(title: Text(menuTitle[_selectedIndex])),
+    body: _widgetOptions.elementAt(_selectedIndex),
+    bottomNavigationBar: BottomNavigationBar(
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: Icon(Icons.home),
@@ -57,6 +61,6 @@ class _NavBarState extends State<NavBar> {
       currentIndex: _selectedIndex,
       selectedItemColor: Colors.black,
       onTap: _onItemTapped,
-    );
+    ));
   }
 }

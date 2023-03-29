@@ -6,9 +6,8 @@ import 'package:flutter_kiinteistohuolto/utils.dart';
 import 'package:flutter_kiinteistohuolto/theme_manager.dart';
 
 import './signIn.dart';
-import './mainMenu.dart';
 import './settings.dart';
-import 'navBar.dart';
+import './navBar.dart';
 
 
 Future main() async {
@@ -54,24 +53,28 @@ class MyAppPage extends State<MyApp> {
         theme: lightTheme,
         darkTheme: darkTheme,
         themeMode: _themeManager.themeMode,
-        home: MainPage(),
+        home: const MainPage(),
       );
 }
 
 class MainPage extends StatelessWidget {
+  const MainPage({super.key});
+
   @override
   Widget build(BuildContext context) => Scaffold(
         body: StreamBuilder<User?>(
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
-              return Center(child: Text('Something went wrong!'));
+              return const Center(child: Text('Something went wrong!'));
             } else if (snapshot.hasData) {
-              return MainMenu(title: "Menu", navbar: NavBar(),);
+              return const Scaffold(
+                body: NavBar(),
+              );
             } else {
-              return Signin();
+              return const Signin();
             }
           },
         ),
