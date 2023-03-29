@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_kiinteistohuolto/theme_constants.dart';
 import 'package:flutter_kiinteistohuolto/utils.dart';
+import 'package:flutter_kiinteistohuolto/theme_manager.dart';
 
 import './signIn.dart';
 import './mainMenu.dart';
@@ -15,13 +17,41 @@ Future main() async {
 }
 
 final navigatorKey = GlobalKey<NavigatorState>();
+Settings theme = Settings();
+ThemeManager _themeManager = theme.getThememode();
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  MyAppPage createState() => MyAppPage();
+}
+
+class MyAppPage extends State<MyApp> {
+  @override
+  void dispose() {
+    _themeManager.removeListener(themeListener);
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    _themeManager.addListener(themeListener);
+    super.initState();
+  }
+
+  themeListener() {
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
   @override
   Widget build(BuildContext context) => MaterialApp(
         scaffoldMessengerKey: Utils.messengerKey,
         navigatorKey: navigatorKey,
         debugShowCheckedModeBanner: false,
+        theme: lightTheme,
+        darkTheme: darkTheme,
+        themeMode: _themeManager.themeMode,
         home: MainPage(),
       );
 }

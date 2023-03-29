@@ -1,14 +1,71 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_kiinteistohuolto/theme_constants.dart';
+import 'package:flutter_kiinteistohuolto/theme_manager.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import './signIn.dart';
 
-class Settings extends StatelessWidget {
+
+ThemeManager _themeManager = ThemeManager();
+
+class Settings extends StatefulWidget {
+  @override
+  _MySettings createState() => _MySettings();
+
+  getThememode() {
+    return _themeManager;
+  }
+}
+
+ 
+
+class _MySettings extends State<Settings> {
+  @override
+  void dispose() {
+    _themeManager.removeListener(themeListener);
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    _themeManager.addListener(themeListener);
+    super.initState();
+  }
+
+  themeListener() {
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+ 
+
+  @override
+  Widget build(BuildContext context) => MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: lightTheme,
+        darkTheme: darkTheme,
+        themeMode: _themeManager.themeMode,
+        home: SettingsPage(),
+      );
+}
+
+class SettingsPage extends StatelessWidget {
   final TextEditingController _newPasswordController = TextEditingController();
   TextEditingController pwagainController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Settings")),
+      appBar: AppBar(
+        title: Text("Settings"),
+        actions: [
+          Switch(
+              value: _themeManager.themeMode == ThemeMode.dark,
+              onChanged: (newValue) {
+                _themeManager.toggleTheme(newValue);
+              })
+        ],
+      ),
       body: Padding(
         padding: const EdgeInsets.all(10),
         child: Column(children: [
@@ -59,7 +116,8 @@ class Settings extends StatelessWidget {
               child: const Text('Sign out'),
               onPressed: () {
                 FirebaseAuth.instance.signOut();
-                Navigator.pop(context);
+                Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => Signin()));
               },
             ),
           ),
