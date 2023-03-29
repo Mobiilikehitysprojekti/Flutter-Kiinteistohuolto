@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
 
 import './signup.dart';
 import './main.dart';
@@ -125,6 +127,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
         password: passwordController.text.trim(),
       );
     } on FirebaseAuthException catch (e) {
+      Fluttertoast.showToast(msg: "Wrong email or password!");
       print(e);
     }
     navigatorKey.currentState!.popUntil((route) => route.isFirst);
