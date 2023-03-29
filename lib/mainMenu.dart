@@ -4,9 +4,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 
 class MainMenu extends StatelessWidget {
-  const MainMenu({super.key, required this.title});
+  const MainMenu({super.key, required this.title, required this.navbar});
 
   final String title;
+  final Widget navbar;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +20,7 @@ class MainMenu extends StatelessWidget {
           itemBuilder: (context, index) {
             return  MenuCard();
           }),
-      bottomNavigationBar: NavBar(),
+          bottomNavigationBar: navbar,
     );
   }
 }

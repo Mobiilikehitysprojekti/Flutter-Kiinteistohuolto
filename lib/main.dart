@@ -8,6 +8,8 @@ import 'package:flutter_kiinteistohuolto/theme_manager.dart';
 import './signIn.dart';
 import './mainMenu.dart';
 import './settings.dart';
+import 'navBar.dart';
+
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -67,7 +69,7 @@ class MainPage extends StatelessWidget {
             } else if (snapshot.hasError) {
               return Center(child: Text('Something went wrong!'));
             } else if (snapshot.hasData) {
-              return MainMenu(title: "Menu");
+              return MainMenu(title: "Menu", navbar: NavBar(),);
             } else {
               return Signin();
             }

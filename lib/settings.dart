@@ -5,6 +5,8 @@ import 'package:flutter_kiinteistohuolto/theme_manager.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import './signIn.dart';
 import './changepassword.dart';
+import 'navBar.dart';
+
 
 ThemeManager _themeManager = ThemeManager();
 var mode = "on";
@@ -60,7 +62,7 @@ class SettingsPage extends StatelessWidget {
         padding: const EdgeInsets.all(10),
         child: Column(children: [
           Container(
-            padding: const EdgeInsets.fromLTRB(10, 10, 10, 20),
+            padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
             child: SwitchListTile(
                 title: Text("Turn " + mode + " dark mode"),
                 value: _themeManager.themeMode == ThemeMode.dark,
@@ -76,16 +78,23 @@ class SettingsPage extends StatelessWidget {
           ),
           Container(
             padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-            child: ElevatedButton(
+            child: SizedBox(
+              width: 200,
+              height: 30,
+              child: ElevatedButton(
               child: const Text('Change Password'),
               onPressed: () {
                 Navigator.of(context)
                     .push(MaterialPageRoute(builder: (context) => ChangePW()));
               },
             ),
+            ),
           ),
           Container(
-            padding: const EdgeInsets.fromLTRB(10, 10, 10, 20),
+            padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+            child: SizedBox(
+            width: 200,
+            height: 30,
             child: ElevatedButton.icon(
               label: const Text('Sign out'),
               icon: Icon(Icons.arrow_back),
@@ -94,6 +103,7 @@ class SettingsPage extends StatelessWidget {
                 Navigator.of(context)
                     .push(MaterialPageRoute(builder: (context) => Signin()));
               },
+            )
             ),
           ),
         ]),

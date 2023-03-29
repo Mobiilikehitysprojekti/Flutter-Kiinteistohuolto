@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
-
+import 'navBar.dart';
 
 
 class ChangePW extends StatelessWidget {
@@ -12,18 +11,17 @@ class ChangePW extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Change password"),
+        title: const Text(""),
       ),
       body: Padding(
         padding: const EdgeInsets.all(10),
         child: Column(children: [
           Container(
               alignment: Alignment.topLeft,
-              padding: EdgeInsets.all(10),
-              child: Text(
+              padding: const EdgeInsets.all(10),
+              child: const Text(
                 'Change Password',
                 style: TextStyle(
-                    color: Colors.blue,
                     fontWeight: FontWeight.w500,
                     fontSize: 30),
               )),
