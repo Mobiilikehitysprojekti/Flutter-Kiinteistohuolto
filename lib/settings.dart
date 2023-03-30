@@ -7,7 +7,6 @@ import './signIn.dart';
 import './changepassword.dart';
 import 'navBar.dart';
 
-
 ThemeManager _themeManager = ThemeManager();
 var mode = "on";
 
@@ -50,8 +49,6 @@ class _MySettings extends State<Settings> {
 }
 
 class SettingsPage extends StatelessWidget {
-  final TextEditingController _newPasswordController = TextEditingController();
-  TextEditingController pwagainController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,33 +75,83 @@ class SettingsPage extends StatelessWidget {
             child: SizedBox(
               width: 200,
               height: 30,
-              child: ElevatedButton(
-              child: const Text('Change Password'),
-              onPressed: () {
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) => ChangePW()));
-              },
-            ),
+              child: ElevatedButton.icon(
+                label: const Text('Change Password'),
+                icon: const Icon(Icons.password),
+                onPressed: () {
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => ChangePW()));
+                },
+              ),
             ),
           ),
           Container(
             padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
             child: SizedBox(
-            width: 200,
-            height: 30,
-            child: ElevatedButton.icon(
-              label: const Text('Sign out'),
-              icon: Icon(Icons.arrow_back),
-              onPressed: () {
-                FirebaseAuth.instance.signOut();
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) => Signin()));
-              },
-            )
+                width: 200,
+                height: 30,
+                child: ElevatedButton.icon(
+                  label: const Text('Sign out'),
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () {
+                    FirebaseAuth.instance.signOut();
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => Signin()));
+                  },
+                )),
+          ),
+          Container(
+            padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+            child: SizedBox(
+              width: 200,
+              height: 30,
+              child: ElevatedButton.icon(
+                label: const Text('Delete User'),
+                icon: const Icon(Icons.delete),
+                onPressed: () {
+                  _displayTextInputDialog(context);
+                },
+              ),
             ),
           ),
         ]),
       ),
     );
+  }
+
+  TextEditingController _textFieldController = TextEditingController();
+
+  Future<void> _displayTextInputDialog(BuildContext context) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Are you sure?'),
+            content: TextField(
+              controller: _textFieldController,
+              decoration: const InputDecoration(hintText: "Input email"),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: Text('CANCEL'),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              TextButton(
+                child: Text('Delete user'),
+                onPressed: () {
+                  Navigator.pop(context);
+                  String? email = FirebaseAuth.instance.currentUser!.email;
+                  if (_textFieldController.text != email) {
+                    Fluttertoast.showToast(msg: "Wrong Email!");
+                  } else {
+                    FirebaseAuth.instance.currentUser!.delete();
+                  }
+                },
+              ),
+            ],
+          );
+        });
   }
 }
