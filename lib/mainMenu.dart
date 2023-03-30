@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -154,7 +155,7 @@ class _OrderFormState extends State<Order> {
           'service': documentSnapshot['name'],
           'status': false,
           'timestamp': DateTime.now(),
-          'UID': 'USER HERE',
+          'UID': FirebaseAuth.instance.currentUser!.uid,
           'message': textController.text
         })
         .then((value) => print("Data added"))
