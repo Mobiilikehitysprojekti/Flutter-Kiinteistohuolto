@@ -11,20 +11,6 @@ class OrderHistory extends StatelessWidget {
     final CollectionReference orders =
         FirebaseFirestore.instance.collection('Orders');
     var lista = [];
-    var _numberToMonthMap = {
-      1: "Jan",
-      2: "Feb",
-      3: "Mar",
-      4: "Apr",
-      5: "May",
-      6: "Jun",
-      7: "Jul",
-      8: "Aug",
-      9: "Sep",
-      10: "Oct",
-      11: "Nov",
-      12: "Dec"
-    };
     return Scaffold(
       body: StreamBuilder(
           stream: orders.snapshots(),
@@ -42,8 +28,6 @@ class OrderHistory extends StatelessWidget {
               return ListView.builder(
                   itemCount: lista.length,
                   itemBuilder: (context, index) {
-                    Timestamp t = lista[index]['timestamp'] as Timestamp;
-                    DateTime date = t.toDate();
                     return Card(
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
@@ -54,8 +38,10 @@ class OrderHistory extends StatelessWidget {
                               width: MediaQuery.of(context).size.width),
                           ListTile(
                             title: Text(lista[index]['service']),
-                            subtitle: Text('${_numberToMonthMap[date.month]} ${date.day} ${date.year}'),
-                          ),
+                            subtitle: Text(DateFormat('MMM d, yyyy h:mm a').format(
+                              (lista[index]['timestamp'] as Timestamp).toDate(),)
+                            ),
+                            ),
                            Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: <Widget>[
