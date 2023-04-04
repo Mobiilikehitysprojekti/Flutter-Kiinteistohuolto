@@ -128,11 +128,15 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
               ),
             ),
             Container(
-                height: 50,
-                padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                child: ElevatedButton(
-                    child: const Text('Register'), onPressed: signUP)),
+              height: 50,
+              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+              child: ElevatedButton(
+                onPressed: signUP,
+                child: const Text('Register'),
+              ),
+            ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 const Text('Already have an account?'),
                 TextButton(
@@ -150,7 +154,6 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                   },
                 )
               ],
-              mainAxisAlignment: MainAxisAlignment.center,
             ),
           ],
         ));
@@ -163,7 +166,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) => Center(child: CircularProgressIndicator()),
+        builder: (context) => const Center(child: CircularProgressIndicator()),
       );
       try {
         await FirebaseAuth.instance.createUserWithEmailAndPassword(

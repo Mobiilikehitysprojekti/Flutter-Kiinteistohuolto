@@ -15,9 +15,9 @@ class _NewsState extends State<News> {
   bool isAdmin = true;
   bool isEditing = false;
   String? selectedCardId;
-  TextEditingController _titleEditingController =
+  final TextEditingController _titleEditingController =
       TextEditingController(text: '');
-  TextEditingController _descriptionEditingController =
+  final TextEditingController _descriptionEditingController =
       TextEditingController(text: '');
 
   final CollectionReference _services =
@@ -45,13 +45,13 @@ class _NewsState extends State<News> {
                           children: [
                             TextFormField(
                               controller: _titleEditingController,
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 hintText: 'Enter title',
                               ),
                             ),
                             TextFormField(
                               controller: _descriptionEditingController,
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 hintText: 'Enter description',
                               ),
                             ),

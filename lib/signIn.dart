@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-
 import './signup.dart';
 import './main.dart';
 
@@ -87,11 +86,15 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
               ),
             ),
             Container(
-                height: 50,
-                padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                child: ElevatedButton(
-                    child: const Text('Login'), onPressed: signIn)),
+              height: 50,
+              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+              child: ElevatedButton(
+                onPressed: signIn,
+                child: const Text('Login'),
+              ),
+            ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 const Text('Does not have account?'),
                 TextButton(
@@ -109,7 +112,6 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                   },
                 )
               ],
-              mainAxisAlignment: MainAxisAlignment.center,
             ),
           ],
         ));
@@ -119,7 +121,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => Center(child: CircularProgressIndicator()),
+      builder: (context) => const Center(child: CircularProgressIndicator()),
     );
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(

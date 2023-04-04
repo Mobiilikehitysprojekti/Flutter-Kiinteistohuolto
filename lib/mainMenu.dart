@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -96,7 +97,6 @@ class Order extends StatefulWidget {
 class _OrderFormState extends State<Order> {
   final textController = TextEditingController();
   DocumentSnapshot documentSnapshot = Order.documentSnapshot;
-
   CollectionReference orders = FirebaseFirestore.instance.collection('Orders');
 
   @override
@@ -139,6 +139,7 @@ class _OrderFormState extends State<Order> {
                       textStyle: const TextStyle(fontSize: 20)),
                   onPressed: () {
                     addOrder();
+                    Navigator.pop(context);
                   },
                   child: const Text("Order"),
                 )
@@ -154,8 +155,9 @@ class _OrderFormState extends State<Order> {
           'service': documentSnapshot['name'],
           'status': false,
           'timestamp': DateTime.now(),
-          'UID': 'USER HERE',
-          'message': textController.text
+          'UID': FirebaseAuth.instance.currentUser!.uid,
+          'message': textController.text,
+          'image': documentSnapshot['image']
         })
         .then((value) => print("Data added"))
         .catchError((error) => print("Couldn't add order"));

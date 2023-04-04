@@ -96,7 +96,7 @@ class SettingsPage extends StatelessWidget {
                   onPressed: () {
                     FirebaseAuth.instance.signOut();
                     Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => Signin()));
+                        MaterialPageRoute(builder: (context) => const Signin()));
                   },
                 )),
           ),
@@ -119,27 +119,27 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  TextEditingController _textFieldController = TextEditingController();
+  final TextEditingController _textFieldController = TextEditingController();
 
   Future<void> _displayTextInputDialog(BuildContext context) async {
     return showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text('Are you sure?'),
+            title: const Text('Are you sure?'),
             content: TextField(
               controller: _textFieldController,
               decoration: const InputDecoration(hintText: "Input email"),
             ),
             actions: <Widget>[
               TextButton(
-                child: Text('CANCEL'),
+                child: const Text('CANCEL'),
                 onPressed: () {
                   Navigator.pop(context);
                 },
               ),
               TextButton(
-                child: Text('Delete user'),
+                child: const Text('Delete user'),
                 onPressed: () {
                   Navigator.pop(context);
                   String? email = FirebaseAuth.instance.currentUser!.email;

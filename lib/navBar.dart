@@ -3,6 +3,8 @@ import 'package:flutter_kiinteistohuolto/mainMenu.dart';
 import './news.dart';
 
 import './settings.dart';
+import './orderHistory.dart';
+
 
 class NavBar extends StatefulWidget {
   const NavBar({super.key});
@@ -19,11 +21,10 @@ class _NavBarState extends State<NavBar> {
     "News",
     "Settings"
   ];
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  static List<Widget> _widgetOptions = <Widget>[
+  
+  final List<Widget> _widgetOptions = <Widget>[
     const Scaffold(body: MainMenu()),
-    const Text("Order history"),
+    const OrderHistory(),
     const Scaffold(body: News()),
     Scaffold(body: Settings())
   ];
