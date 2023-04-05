@@ -30,10 +30,12 @@ class _NewsState extends State<News> {
       appBar: AppBar(
         title: Text("news"),
       ),
-         floatingActionButton: isAdmin ? FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: _addCard,
-      ) : null,
+      floatingActionButton: isAdmin
+          ? FloatingActionButton(
+              child: Icon(Icons.add),
+              onPressed: _addCard,
+            )
+          : null,
       body: StreamBuilder(
         stream: _services.orderBy('timestamp', descending: true).snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
@@ -45,7 +47,7 @@ class _NewsState extends State<News> {
                     streamSnapshot.data!.docs[index];
                 final bool isSelected = documentSnapshot.id == selectedCardId;
                 bool isExpanded = false;
-                
+
                 return Card(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -113,16 +115,7 @@ class _NewsState extends State<News> {
                                         ? '${documentSnapshot['description'].substring(0, 200)}...'
                                         : documentSnapshot['description'],
                               ),
-                              if (documentSnapshot['description'].length > 200 &&
-                                  selectedCardId != documentSnapshot.id)
-                                TextButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      selectedCardId = documentSnapshot.id;
-                                    });
-                                  },
-                                  child: const Text('Read More'),
-                                ),
+                    
                             ],
                           ),
                           trailing: Text(
@@ -132,9 +125,21 @@ class _NewsState extends State<News> {
                             ),
                           ),
                           onTap: () {
-                            setState(() {
-                              selectedCardId = documentSnapshot.id;
-                            });
+                            showDialog(
+                              context: context,
+                              builder: (_) => AlertDialog(
+                                title: Text(documentSnapshot['title']),
+                                content: Text(documentSnapshot['description']),
+                                actions: [
+                                  TextButton(
+                                    child: const Text('Close'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              ),
+                            );
                           },
                         ),
                       Row(
