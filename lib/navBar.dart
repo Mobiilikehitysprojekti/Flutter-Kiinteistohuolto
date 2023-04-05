@@ -1,7 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_kiinteistohuolto/mainMenu.dart';
 import './news.dart';
-
 import './settings.dart';
 import './orderHistory.dart';
 
@@ -14,6 +14,8 @@ class NavBar extends StatefulWidget {
 }
 
 class _NavBarState extends State<NavBar> {
+  final CollectionReference _services =
+      FirebaseFirestore.instance.collection('News');
   int _selectedIndex = 0;
   final List<String> menuTitle = [
     "Main menu",
@@ -26,7 +28,7 @@ class _NavBarState extends State<NavBar> {
     const Scaffold(body: MainMenu()),
     Scaffold(body: OrderHistory()),
     const Scaffold(body: News()),
-    Scaffold(body: Settings())
+    Scaffold(body: SettingsClass())
   ];
 
   void _onItemTapped(int index) {
@@ -38,7 +40,13 @@ class _NavBarState extends State<NavBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text(menuTitle[_selectedIndex])),
+        appBar: AppBar(title: Text(menuTitle[_selectedIndex]), actions: [
+          if (_selectedIndex == 2)
+            IconButton(
+              icon: Icon(Icons.add),
+              onPressed: _addCard,
+            ),
+        ],),
         body: _widgetOptions.elementAt(_selectedIndex),
         bottomNavigationBar: BottomNavigationBar(
           items: const <BottomNavigationBarItem>[
@@ -68,4 +76,13 @@ class _NavBarState extends State<NavBar> {
           onTap: _onItemTapped,
         ));
   }
+
+void _addCard() {
+    _services.add({
+      'title': 'New card title',
+      'description': 'New card description',
+      'timestamp': Timestamp.now(),
+    });
+  }
+
 }

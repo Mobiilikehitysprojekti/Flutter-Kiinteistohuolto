@@ -18,7 +18,7 @@ Future main() async {
 }
 
 final navigatorKey = GlobalKey<NavigatorState>();
-Settings theme = Settings();
+SettingsClass theme = SettingsClass();
 ThemeManager _themeManager = theme.getThememode();
 
 class MyApp extends StatefulWidget {

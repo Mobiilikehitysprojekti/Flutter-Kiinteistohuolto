@@ -10,7 +10,7 @@ import 'navBar.dart';
 ThemeManager _themeManager = ThemeManager();
 var mode = "on";
 
-class Settings extends StatefulWidget {
+class SettingsClass extends StatefulWidget {
   @override
   _MySettings createState() => _MySettings();
 
@@ -19,7 +19,7 @@ class Settings extends StatefulWidget {
   }
 }
 
-class _MySettings extends State<Settings> {
+class _MySettings extends State<SettingsClass> {
   @override
   void dispose() {
     _themeManager.removeListener(themeListener);
