@@ -39,18 +39,17 @@ class OrderHistory extends StatelessWidget {
                               width: MediaQuery.of(context).size.width),
                           ListTile(
                             title: Text(lista[index]['service']),
-                            subtitle:
-                                Text(DateFormat('MMM d, yyyy h:mm a').format(
-                              (lista[index]['timestamp'] as Timestamp).toDate(),
-                            )),
-                          ),
-                          Row(
+                            subtitle: Text(DateFormat('MMM d, yyyy h:mm a').format(
+                              (lista[index]['timestamp'] as Timestamp).toDate(),)
+                            ),
+                            ),
+                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: <Widget>[
                               TextButton(
                                 child: const Text('About'),
                                 onPressed: () {
-                                  _displayTextInputDialog(context);
+                                  _displayTextInputDialog(context, lista[index]);
                                 },
                               ),
                               const SizedBox(width: 8),
@@ -82,35 +81,18 @@ class OrderHistory extends StatelessWidget {
     );
   }
 
-  final TextEditingController _textFieldController = TextEditingController();
-
-  Future<void> _displayTextInputDialog(BuildContext context) async {
+  Future<void> _displayTextInputDialog(BuildContext context, DocumentSnapshot documentSnapshot) async {
     return showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: const Text('Are you sure?'),
-            content: TextField(
-              controller: _textFieldController,
-              decoration: const InputDecoration(hintText: "Input email"),
-            ),
+            title: const Text('About'),
+            content: Text(documentSnapshot['message']),
             actions: <Widget>[
               TextButton(
-                child: const Text('CANCEL'),
+                child: const Text('Close'),
                 onPressed: () {
                   Navigator.pop(context);
-                },
-              ),
-              TextButton(
-                child: const Text('Delete user'),
-                onPressed: () {
-                  Navigator.pop(context);
-                  String? email = FirebaseAuth.instance.currentUser!.email;
-                  if (_textFieldController.text != email) {
-                    Fluttertoast.showToast(msg: "Wrong Email!");
-                  } else {
-                    FirebaseAuth.instance.currentUser!.delete();
-                  }
                 },
               ),
             ],
@@ -129,10 +111,9 @@ class About extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(documentSnapshot['service'])),
-      body:
-          Center(child: Column(children: [Text(documentSnapshot['message'])])),
+      body: Center(child: Column(children: [Text(documentSnapshot['message'])])),
     );
   }
 
-  
+ 
 }
