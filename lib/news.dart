@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'navBar.dart';
 import 'package:intl/intl.dart';
 
-
 class News extends StatefulWidget {
   const News({Key? key, required this.title}) : super(key: key);
 
@@ -30,14 +29,11 @@ class _NewsState extends State<News> {
     return Scaffold(
       appBar: AppBar(
         title: Text("news"),
-        actions: [
-          if (isAdmin)
-            IconButton(
-              icon: Icon(Icons.add),
-              onPressed: _addCard,
-            ),
-        ],
       ),
+         floatingActionButton: isAdmin ? FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: _addCard,
+      ) : null,
       body: StreamBuilder(
         stream: _services.orderBy('timestamp', descending: true).snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
@@ -48,6 +44,8 @@ class _NewsState extends State<News> {
                 final DocumentSnapshot documentSnapshot =
                     streamSnapshot.data!.docs[index];
                 final bool isSelected = documentSnapshot.id == selectedCardId;
+                bool isExpanded = false;
+                
                 return Card(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -104,13 +102,40 @@ class _NewsState extends State<News> {
                       else
                         ListTile(
                           title: Text(documentSnapshot['title']),
-                          subtitle: Text(documentSnapshot['description']),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                selectedCardId == documentSnapshot.id
+                                    ? documentSnapshot['description']
+                                    : documentSnapshot['description'].length >
+                                            200
+                                        ? '${documentSnapshot['description'].substring(0, 200)}...'
+                                        : documentSnapshot['description'],
+                              ),
+                              if (documentSnapshot['description'].length > 200 &&
+                                  selectedCardId != documentSnapshot.id)
+                                TextButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      selectedCardId = documentSnapshot.id;
+                                    });
+                                  },
+                                  child: const Text('Read More'),
+                                ),
+                            ],
+                          ),
                           trailing: Text(
                             DateFormat('MMM d, yyyy h:mm a').format(
                               (documentSnapshot['timestamp'] as Timestamp)
                                   .toDate(),
                             ),
                           ),
+                          onTap: () {
+                            setState(() {
+                              selectedCardId = documentSnapshot.id;
+                            });
+                          },
                         ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
