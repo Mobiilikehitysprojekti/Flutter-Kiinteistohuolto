@@ -1,10 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 
 class OrderHistory extends StatelessWidget {
-  const OrderHistory({super.key});
+  OrderHistory({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -38,21 +39,18 @@ class OrderHistory extends StatelessWidget {
                               width: MediaQuery.of(context).size.width),
                           ListTile(
                             title: Text(lista[index]['service']),
-                            subtitle: Text(DateFormat('MMM d, yyyy h:mm a').format(
-                              (lista[index]['timestamp'] as Timestamp).toDate(),)
-                            ),
-                            ),
-                           Row(
+                            subtitle:
+                                Text(DateFormat('MMM d, yyyy h:mm a').format(
+                              (lista[index]['timestamp'] as Timestamp).toDate(),
+                            )),
+                          ),
+                          Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: <Widget>[
                               TextButton(
                                 child: const Text('About'),
                                 onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              About(lista[index])));
+                                  _displayTextInputDialog(context);
                                 },
                               ),
                               const SizedBox(width: 8),
@@ -83,6 +81,42 @@ class OrderHistory extends StatelessWidget {
           }),
     );
   }
+
+  final TextEditingController _textFieldController = TextEditingController();
+
+  Future<void> _displayTextInputDialog(BuildContext context) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Are you sure?'),
+            content: TextField(
+              controller: _textFieldController,
+              decoration: const InputDecoration(hintText: "Input email"),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('CANCEL'),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              TextButton(
+                child: const Text('Delete user'),
+                onPressed: () {
+                  Navigator.pop(context);
+                  String? email = FirebaseAuth.instance.currentUser!.email;
+                  if (_textFieldController.text != email) {
+                    Fluttertoast.showToast(msg: "Wrong Email!");
+                  } else {
+                    FirebaseAuth.instance.currentUser!.delete();
+                  }
+                },
+              ),
+            ],
+          );
+        });
+  }
 }
 
 class About extends StatelessWidget {
@@ -95,7 +129,10 @@ class About extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(documentSnapshot['service'])),
-      body: Center(child: Column(children: [Text(documentSnapshot['message'])])),
+      body:
+          Center(child: Column(children: [Text(documentSnapshot['message'])])),
     );
   }
+
+  
 }

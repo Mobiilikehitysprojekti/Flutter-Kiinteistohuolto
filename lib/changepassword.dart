@@ -3,16 +3,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'navBar.dart';
 
-
 class ChangePW extends StatelessWidget {
   final TextEditingController _newPasswordController = TextEditingController();
   TextEditingController pwagainController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(""),
-      ),
       body: Padding(
         padding: const EdgeInsets.all(10),
         child: Column(children: [
@@ -21,9 +17,7 @@ class ChangePW extends StatelessWidget {
               padding: const EdgeInsets.all(10),
               child: const Text(
                 'Change Password',
-                style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 30),
+                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 30),
               )),
           Container(
             padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
@@ -53,6 +47,15 @@ class ChangePW extends StatelessWidget {
               child: const Text('Change Password'),
               onPressed: () {
                 changePassword(_newPasswordController.text);
+              },
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+            child: ElevatedButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.pop(context);
               },
             ),
           ),
