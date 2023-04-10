@@ -33,19 +33,9 @@ class MainMenu extends StatelessWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: <Widget>[
-                              TextButton(
-                                child: const Text('About'),
-                                onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              About(documentSnapshot)));
-                                },
-                              ),
                               const SizedBox(width: 8),
                               TextButton(
-                                child: const Text('Order'),
+                                child: const Text('About/Order'),
                                 onPressed: () {
                                   Navigator.push(
                                       context,
@@ -108,11 +98,11 @@ class _OrderFormState extends State<Order> {
 
   @override
   Widget build(BuildContext context) {
+    if(documentSnapshot['type'] == "1") {
     return Scaffold(
         appBar: AppBar(title: Text(documentSnapshot['name'])),
         body: Center(
             child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Card(
               shape: RoundedRectangleBorder(
@@ -123,6 +113,49 @@ class _OrderFormState extends State<Order> {
               child: Image.network(documentSnapshot['image'],
                   height: 250, width: 400, fit: BoxFit.cover),
             ),
+            Text(documentSnapshot['about'], textAlign: TextAlign.center),
+            Container(
+              padding: const EdgeInsets.all(10.0),
+              child: TextField(
+                controller: textController,
+                decoration:
+                    const InputDecoration(hintText: 'Additional message'),
+              ),
+            ),
+              RadioListTile(title: Text("Call and agree time."), value: 0, groupValue: 1, onChanged: null),
+              RadioListTile(title: Text("Maintenance use own key."), value: 0, groupValue: 1, onChanged: null),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  style: TextButton.styleFrom(
+                      textStyle: const TextStyle(fontSize: 20)),
+                  onPressed: () {
+                    addOrder();
+                  },
+                  child: const Text("Order"),
+                )
+              ],
+            ),
+          ],
+        )));
+        }
+        else {
+          return Scaffold(
+        appBar: AppBar(title: Text(documentSnapshot['name'])),
+        body: Center(
+            child: Column(
+          children: [
+            Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              elevation: 5,
+              margin: const EdgeInsets.all(10),
+              child: Image.network(documentSnapshot['image'],
+                  height: 250, width: 400, fit: BoxFit.cover),
+            ),
+            Text(documentSnapshot['about'], textAlign: TextAlign.center),
             Container(
               padding: const EdgeInsets.all(10.0),
               child: TextField(
@@ -147,6 +180,7 @@ class _OrderFormState extends State<Order> {
             ),
           ],
         )));
+        }
   }
 
   Future<void> addOrder() {
