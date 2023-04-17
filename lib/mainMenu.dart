@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class MainMenu extends StatelessWidget {
   const MainMenu({super.key});
@@ -87,8 +88,11 @@ class Order extends StatefulWidget {
 class _OrderFormState extends State<Order> {
   final textController = TextEditingController();
   DocumentSnapshot documentSnapshot = Order.documentSnapshot;
+  List<int> options = [0, 1];
 
   CollectionReference orders = FirebaseFirestore.instance.collection('Orders');
+  
+  int currentOption = 0;
 
   @override
   void dispose() {
@@ -122,8 +126,20 @@ class _OrderFormState extends State<Order> {
                     const InputDecoration(hintText: 'Additional message'),
               ),
             ),
-              RadioListTile(title: Text("Call and agree time."), value: 0, groupValue: 1, onChanged: null),
-              RadioListTile(title: Text("Maintenance use own key."), value: 0, groupValue: 1, onChanged: null),
+              RadioListTile(title: const Text("Call and agree time."), value: options[0], groupValue: currentOption, onChanged: (value) { setState(() {
+                if(value != null){
+                  currentOption = value;
+                }
+              }
+              );
+              }),
+              RadioListTile(title: const Text("Maintenance use own key."), value: options[1], groupValue: currentOption, onChanged: (value) { setState(() {
+                if(value != null){
+                  currentOption = value;
+                }
+              }
+              );
+              }),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -132,6 +148,8 @@ class _OrderFormState extends State<Order> {
                       textStyle: const TextStyle(fontSize: 20)),
                   onPressed: () {
                     addOrder();
+                    Navigator.of(context).pop();
+                    Fluttertoast.showToast(msg: "Order complete");
                   },
                   child: const Text("Order"),
                 )
@@ -173,6 +191,8 @@ class _OrderFormState extends State<Order> {
                       textStyle: const TextStyle(fontSize: 20)),
                   onPressed: () {
                     addOrder();
+                    Navigator.of(context).pop();
+                    Fluttertoast.showToast(msg: "Order complete");
                   },
                   child: const Text("Order"),
                 )
@@ -190,7 +210,8 @@ class _OrderFormState extends State<Order> {
           'status': false,
           'timestamp': DateTime.now(),
           'UID': FirebaseAuth.instance.currentUser!.uid,
-          'message': textController.text
+          'message': textController.text,
+          'option': currentOption
         })
         .then((value) => print("Data added"))
         .catchError((error) => print("Couldn't add order"));
