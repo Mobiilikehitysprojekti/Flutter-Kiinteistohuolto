@@ -1,6 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 class MainMenu extends StatelessWidget {
   const MainMenu({super.key});
@@ -33,19 +38,9 @@ class MainMenu extends StatelessWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: <Widget>[
-                              TextButton(
-                                child: const Text('About'),
-                                onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              About(documentSnapshot)));
-                                },
-                              ),
                               const SizedBox(width: 8),
                               TextButton(
-                                child: const Text('Order'),
+                                child: const Text('About/Order'),
                                 onPressed: () {
                                   Navigator.push(
                                       context,
@@ -97,7 +92,11 @@ class Order extends StatefulWidget {
 class _OrderFormState extends State<Order> {
   final textController = TextEditingController();
   DocumentSnapshot documentSnapshot = Order.documentSnapshot;
+  List<int> options = [0, 1];
+
   CollectionReference orders = FirebaseFirestore.instance.collection('Orders');
+
+  int currentOption = 0;
 
   @override
   void dispose() {
@@ -107,46 +106,132 @@ class _OrderFormState extends State<Order> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(title: Text(documentSnapshot['name'])),
-        body: Center(
-            child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
+    if (documentSnapshot['type'] == "1") {
+      return Scaffold(
+          appBar: AppBar(title: Text(documentSnapshot['name'])),
+          body: Center(
+              child: Column(
+            children: [
+              Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                elevation: 5,
+                margin: const EdgeInsets.all(10),
+                child: Image.network(documentSnapshot['image'],
+                    height: 250, width: 400, fit: BoxFit.cover),
               ),
-              elevation: 5,
-              margin: const EdgeInsets.all(10),
-              child: Image.network(documentSnapshot['image'],
-                  height: 250, width: 400, fit: BoxFit.cover),
-            ),
-            Container(
-              padding: const EdgeInsets.all(10.0),
-              child: TextField(
-                controller: textController,
-                decoration:
-                    const InputDecoration(hintText: 'Additional message'),
+              Text(documentSnapshot['about'], textAlign: TextAlign.center),
+              Container(
+                padding: const EdgeInsets.all(10.0),
+                child: TextField(
+                  controller: textController,
+                  decoration:
+                      const InputDecoration(hintText: 'Additional message'),
+                ),
               ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Text("Price: ${documentSnapshot['price']}€"),
-                ElevatedButton(
-                  style: TextButton.styleFrom(
-                      textStyle: const TextStyle(fontSize: 20)),
-                  onPressed: () {
-                    addOrder();
-                    Navigator.pop(context);
-                  },
-                  child: const Text("Order"),
-                )
-              ],
-            ),
-          ],
-        )));
+              RadioListTile(
+                  title: const Text("Call and agree time."),
+                  value: options[0],
+                  groupValue: currentOption,
+                  onChanged: (value) {
+                    setState(() {
+                      if (value != null) {
+                        currentOption = value;
+                      }
+                    });
+                  }),
+              RadioListTile(
+                  title: const Text("Maintenance use own key."),
+                  value: options[1],
+                  groupValue: currentOption,
+                  onChanged: (value) {
+                    setState(() {
+                      if (value != null) {
+                        currentOption = value;
+                      }
+                    });
+                  }),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    style: TextButton.styleFrom(
+                        textStyle: const TextStyle(fontSize: 20)),
+                    onPressed: () => getImage(ImageSource.camera),
+                    child: const Text("Take a picture"),
+                  ),
+                  ElevatedButton(
+                    style: TextButton.styleFrom(
+                        textStyle: const TextStyle(fontSize: 20)),
+                    onPressed: () => getImage(ImageSource.gallery),
+                    child: const Text("Choose picture"),
+                  ),
+                  ElevatedButton(
+                    style: TextButton.styleFrom(
+                        textStyle: const TextStyle(fontSize: 20)),
+                    onPressed: () {
+                      addOrder();
+                      Navigator.of(context).pop();
+                      Fluttertoast.showToast(msg: "Order complete");
+                    },
+                    child: const Text("Order"),
+                  )
+                ],
+              ),
+              image != null
+                  ? Image.file(
+                      image!,
+                      width: 150,
+                      height: 150,
+                      fit: BoxFit.cover,
+                    )
+                  : Container(),
+            ],
+          )));
+    } else {
+      return Scaffold(
+          appBar: AppBar(title: Text(documentSnapshot['name'])),
+          body: Center(
+              child: Column(
+            children: [
+              Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                elevation: 5,
+                margin: const EdgeInsets.all(10),
+                child: Image.network(documentSnapshot['image'],
+                    height: 250, width: 400, fit: BoxFit.cover),
+              ),
+              Text(documentSnapshot['about'], textAlign: TextAlign.center),
+              Container(
+                padding: const EdgeInsets.all(10.0),
+                child: TextField(
+                  controller: textController,
+                  decoration:
+                      const InputDecoration(hintText: 'Additional message'),
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text("Price: ${documentSnapshot['price']}€"),
+                  ElevatedButton(
+                    style: TextButton.styleFrom(
+                        textStyle: const TextStyle(fontSize: 20)),
+                    onPressed: () {
+                      addOrder();
+                      Navigator.of(context).pop();
+                      Fluttertoast.showToast(msg: "Order complete");
+                    },
+                    child: const Text("Order"),
+                  )
+                ],
+              ),
+            ],
+          )));
+    }
   }
 
   Future<void> addOrder() {
@@ -157,9 +242,24 @@ class _OrderFormState extends State<Order> {
           'timestamp': DateTime.now(),
           'UID': FirebaseAuth.instance.currentUser!.uid,
           'message': textController.text,
-          'image': documentSnapshot['image']
+          'option': currentOption,
+          'image': documentSnapshot['image'],
         })
         .then((value) => print("Data added"))
         .catchError((error) => print("Couldn't add order"));
+  }
+
+  File? image;
+
+  Future getImage(ImageSource source) async {
+    try {
+      final image = await ImagePicker().pickImage(source: source);
+      if (image == null) return;
+
+      final imageTemporary = File(image.path);
+      setState(() => this.image = imageTemporary);
+    } on PlatformException catch (e) {
+      print("Failed to take picture: $e");
+    }
   }
 }
