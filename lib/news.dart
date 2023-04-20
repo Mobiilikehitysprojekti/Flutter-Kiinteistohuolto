@@ -2,7 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'navBar.dart';
 import 'package:intl/intl.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
+import 'admin.dart';
 
 class News extends StatefulWidget {
   const News({Key? key}) : super(key: key);
@@ -12,19 +13,25 @@ class News extends StatefulWidget {
 }
 
 class _NewsState extends State<News> {
-  bool isAdmin = true;
   bool isEditing = false;
   String? selectedCardId;
-  TextEditingController _titleEditingController =
+  final TextEditingController _titleEditingController =
       TextEditingController(text: '');
-  TextEditingController _descriptionEditingController =
+  final TextEditingController _descriptionEditingController =
       TextEditingController(text: '');
 
   final CollectionReference _services =
       FirebaseFirestore.instance.collection('News');
 
+  bool admin = Admin.admin();
+
   @override
-  Widget build(BuildContext context) {
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
+  Widget build (BuildContext context) {
     return Scaffold(
       body: StreamBuilder(
         stream: _services.orderBy('timestamp', descending: true).snapshots(),
@@ -36,6 +43,8 @@ class _NewsState extends State<News> {
                 final DocumentSnapshot documentSnapshot =
                     streamSnapshot.data!.docs[index];
                 final bool isSelected = documentSnapshot.id == selectedCardId;
+                bool isExpanded = false;
+
                 return Card(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -92,18 +101,47 @@ class _NewsState extends State<News> {
                       else
                         ListTile(
                           title: Text(documentSnapshot['title']),
-                          subtitle: Text(documentSnapshot['description']),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                selectedCardId == documentSnapshot.id
+                                    ? documentSnapshot['description']
+                                    : documentSnapshot['description'].length >
+                                            200
+                                        ? '${documentSnapshot['description'].substring(0, 200)}...'
+                                        : documentSnapshot['description'],
+                              ),
+                            ],
+                          ),
                           trailing: Text(
                             DateFormat('MMM d, yyyy h:mm a').format(
                               (documentSnapshot['timestamp'] as Timestamp)
                                   .toDate(),
                             ),
                           ),
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (_) => AlertDialog(
+                                title: Text(documentSnapshot['title']),
+                                content: Text(documentSnapshot['description']),
+                                actions: [
+                                  TextButton(
+                                    child: const Text('Close'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
                         ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[
-                          if (isAdmin && !isEditing)
+                          if (admin && !isEditing)
                             TextButton(
                               child: const Text('edit'),
                               onPressed: () {
@@ -118,7 +156,7 @@ class _NewsState extends State<News> {
                               },
                             ),
                           const SizedBox(width: 8),
-                          if (isAdmin && !isEditing)
+                          if (admin && !isEditing)
                             TextButton(
                               child: const Text('delete'),
                               onPressed: () {
@@ -140,7 +178,6 @@ class _NewsState extends State<News> {
       ),
     );
   }
-
   void _addCard() {
     _services.add({
       'title': 'New card title',

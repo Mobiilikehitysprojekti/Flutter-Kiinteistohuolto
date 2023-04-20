@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'admin.dart';
 
 
 import './signup.dart';
@@ -119,16 +120,18 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => Center(child: CircularProgressIndicator()),
+      builder: (context) => const Center(child: CircularProgressIndicator()),
     );
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
+      Admin.isAdmin();
     } on FirebaseAuthException catch (e) {
       Fluttertoast.showToast(msg: "Wrong email or password!");
       print(e);
+      Admin.isAdmin();
     }
     navigatorKey.currentState!.popUntil((route) => route.isFirst);
   }
