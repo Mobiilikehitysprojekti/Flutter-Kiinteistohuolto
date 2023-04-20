@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_kiinteistohuolto/theme_constants.dart';
 import 'package:flutter_kiinteistohuolto/utils.dart';
 import 'package:flutter_kiinteistohuolto/theme_manager.dart';
+import 'admin.dart';
 
 import './signIn.dart';
 import './settings.dart';
@@ -13,13 +14,13 @@ import './navBar.dart';
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-
+  await Admin.isAdmin();
 
   runApp(MyApp());
 }
 
 final navigatorKey = GlobalKey<NavigatorState>();
-SettingsClass theme = SettingsClass();
+SettingsClass  theme = SettingsClass ();
 ThemeManager _themeManager = theme.getThememode();
 
 class MyApp extends StatefulWidget {

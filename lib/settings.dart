@@ -19,7 +19,7 @@ class SettingsClass extends StatefulWidget {
   }
 }
 
-class _MySettings extends State<SettingsClass> {
+class _MySettings extends State<SettingsClass > {
   @override
   void dispose() {
     _themeManager.removeListener(themeListener);
