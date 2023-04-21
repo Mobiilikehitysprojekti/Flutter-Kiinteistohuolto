@@ -5,14 +5,16 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import './admin.dart';
 
+
 class OrderHistory extends StatelessWidget {
   OrderHistory({super.key});
+  List<String> options = ["Call and agree time", "Maintenance use own key"];
   bool admin = Admin.admin();
-
+  final CollectionReference orders =
+      FirebaseFirestore.instance.collection('Orders');
+  String? selectedCardId;
   @override
   Widget build(BuildContext context) {
-    final CollectionReference orders =
-        FirebaseFirestore.instance.collection('Orders');
     var lista = [];
     return Scaffold(
       body: StreamBuilder(
@@ -86,6 +88,9 @@ class OrderHistory extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final DocumentSnapshot documentSnapshot =
                         streamSnapshot.data!.docs[index];
+                    selectedCardId == documentSnapshot.id;
+                    final bool isSelected =
+                        documentSnapshot.id == selectedCardId;
                     return Card(
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
@@ -111,12 +116,13 @@ class OrderHistory extends StatelessWidget {
                                       context, lista[index]);
                                 },
                               ),
-                              TextButton(
-                                child: const Text('Delete'),
-                                onPressed: () {
-                                  orders.doc(documentSnapshot.id).delete();
-                                },
-                              ),
+                              if (isSelected)
+                                TextButton(
+                                  child: const Text('Delete'),
+                                  onPressed: () {
+                                    orders.doc(documentSnapshot.id).delete();
+                                  },
+                                ),
                               const SizedBox(width: 8),
                             ],
                           ),
@@ -138,7 +144,15 @@ class OrderHistory extends StatelessWidget {
         builder: (context) {
           return AlertDialog(
             title: const Text('About'),
-            content: Text(documentSnapshot['message']),
+            content: Column(children: <Widget> [
+              Text(documentSnapshot['message']),
+              Text(options[documentSnapshot['option']]),
+              if(documentSnapshot['status'] == true)
+              const Text("Status: Done",)
+              else
+              const Text("Status: Pending...",)
+            ],
+            mainAxisSize: MainAxisSize.min,),
             actions: <Widget>[
               TextButton(
                 child: const Text('Close'),
