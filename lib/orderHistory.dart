@@ -5,14 +5,25 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import './admin.dart';
 
+class OrderHistoryy extends StatefulWidget {
+  const OrderHistoryy({Key? key}) : super(key: key);
 
-class OrderHistory extends StatelessWidget {
-  OrderHistory({super.key});
+  @override
+  _OrderHistory createState() => _OrderHistory();
+}
+
+class _OrderHistory extends State<OrderHistoryy> {
   List<String> options = ["Call and agree time", "Maintenance use own key"];
   bool admin = Admin.admin();
   final CollectionReference orders =
       FirebaseFirestore.instance.collection('Orders');
   String? selectedCardId;
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     var lista = [];
@@ -116,13 +127,14 @@ class OrderHistory extends StatelessWidget {
                                       context, lista[index]);
                                 },
                               ),
-                              if (isSelected)
-                                TextButton(
-                                  child: const Text('Delete'),
-                                  onPressed: () {
+                              TextButton(
+                                child: const Text('Delete'),
+                                onPressed: () {
+                                  setState(() {
                                     orders.doc(documentSnapshot.id).delete();
-                                  },
-                                ),
+                                  });
+                                },
+                              ),
                               const SizedBox(width: 8),
                             ],
                           ),
@@ -144,15 +156,21 @@ class OrderHistory extends StatelessWidget {
         builder: (context) {
           return AlertDialog(
             title: const Text('About'),
-            content: Column(children: <Widget> [
-              Text(documentSnapshot['message']),
-              Text(options[documentSnapshot['option']]),
-              if(documentSnapshot['status'] == true)
-              const Text("Status: Done",)
-              else
-              const Text("Status: Pending...",)
-            ],
-            mainAxisSize: MainAxisSize.min,),
+            content: Column(
+              children: <Widget>[
+                Text(documentSnapshot['message']),
+                Text(options[documentSnapshot['option']]),
+                if (documentSnapshot['status'] == true)
+                  const Text(
+                    "Status: Done",
+                  )
+                else
+                  const Text(
+                    "Status: Pending...",
+                  )
+              ],
+              mainAxisSize: MainAxisSize.min,
+            ),
             actions: <Widget>[
               TextButton(
                 child: const Text('Close'),
@@ -166,18 +184,4 @@ class OrderHistory extends StatelessWidget {
   }
 }
 
-class About extends StatelessWidget {
-  static late DocumentSnapshot documentSnapshot;
-  About(DocumentSnapshot snapshot, {super.key}) {
-    documentSnapshot = snapshot;
-  }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(documentSnapshot['service'])),
-      body:
-          Center(child: Column(children: [Text(documentSnapshot['message'])])),
-    );
-  }
-}

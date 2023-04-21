@@ -26,7 +26,7 @@ class _NavBarState extends State<NavBar> {
   
   final List<Widget> _widgetOptions = <Widget>[
     const Scaffold(body: MainMenu()),
-    Scaffold(body: OrderHistory()),
+    Scaffold(body: const OrderHistoryy()),
     const Scaffold(body: News()),
     Scaffold(body: SettingsClass())
   ];
